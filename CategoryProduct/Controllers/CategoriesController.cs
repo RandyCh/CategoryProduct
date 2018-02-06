@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -48,12 +49,11 @@ namespace CategoryProduct.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CategoryID,CategoryName,Description,Picture")] Categories categories)
         {
-            if (ModelState.IsValid)
-            {
-                db.Categories.Add(categories);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+
+            ReceiveImgFile(categories);
+            db.Categories.Add(categories);
+            db.SaveChanges();
+            return RedirectToAction("Index");
 
             return View(categories);
         }
@@ -82,11 +82,25 @@ namespace CategoryProduct.Controllers
         {
             if (ModelState.IsValid)
             {
+                ReceiveImgFile(categories);
                 db.Entry(categories).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(categories);
+        }
+
+        private void ReceiveImgFile(Categories categories)
+        {
+            if (Request.Files["#File1"] != null)
+            {
+                byte[] data = null;
+                using (BinaryReader br = new BinaryReader(Request.Files["#File1"].InputStream))
+                {
+                    data = br.ReadBytes(Request.Files["#File1"].ContentLength);
+                    categories.Picture = data;
+                }
+            }
         }
 
         // GET: Categories/Delete/5

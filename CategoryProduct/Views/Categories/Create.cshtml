@@ -7,10 +7,10 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Categories", FormMethod.Post, new { @enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Categories</h4>
         <hr />
@@ -34,8 +34,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Picture, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Picture, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Picture, "", new { @class = "text-danger" })
+                <img id="imgPreview" style="width:320px;height:240px" />
+                <input type="file" name="File1" id="File1" accept="image.*" />
             </div>
         </div>
 
@@ -53,4 +53,8 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/site.js"></script>
+    <script>
+        $("#File1").change(function () { readURL(this,$("#imgPreview")) });
+    </script>
 }
