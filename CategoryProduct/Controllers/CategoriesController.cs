@@ -55,7 +55,7 @@ namespace CategoryProduct.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
 
-            return View(categories);
+            //return View(categories);
         }
 
         // GET: Categories/Edit/5
